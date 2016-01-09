@@ -1,0 +1,15 @@
+development:
+  facebook:
+    id: 402468833285170 
+    secret_key: 190e01781967a32f381277225a3e0760 
+  google:
+    id: 
+    secret_key: 
+
+production:
+  facebook:
+    id: 695460620588445
+    secret_key: 505ffe2176ccfac04ec638ed8420165e
+  google:
+    id: 
+    secret_key: 

@@ -1,0 +1,305 @@
+
+
+<div class="TopOne">
+  <%= form_for @playground do |f| %>
+    <%= f.text_field:address, class: "address", id: 'playground_search_box', placeholder: 'Search Your Location Here', 'data-delimiter' => ',',oninput:'keyDown()' %>
+  <% end %>
+  <div class="generate_address_wrapper"><span class="generate_address">Generate Address</span></div>
+</div>
+ 
+<div class="Behind">
+<%= stylesheet_link_tag "gmaps4rails" %>
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css" rel="stylesheet" />
+
+
+<style>
+/*#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 45%;
+  z-index: 5;
+  background-color: #fff;
+  padding: 5px;
+  border: 1px solid #999;
+  text-align: center;
+  font-family: 'Roboto','sans-serif';
+  line-height: 30px;
+  padding-left: 10px;
+}*/
+
+
+/* customize coding */
+/*.modal-body
+{
+  padding: 0px !important;
+}*/
+.ctm
+{
+  text-align: center;
+  margin-top:20px;
+  font-size:16px;
+  font-weight:normal;
+  letter-spacing:1px;
+  
+  }
+  .wrap1
+  {
+    z-index:999;
+    position:absolute;
+    width:100%;
+    min-height:900px;
+    cursor:pointer;
+  }
+  .modal-content h3
+  {
+     float: left;
+    font-size: 19px;
+    font-weight: normal;
+    margin-bottom: 30px;
+    margin-left: 11px;
+    margin-right: 11px;
+    margin-top: 10px;
+    text-align: center;
+  }
+/*  .pop1
+  {
+    min-height:107px;
+  }*/
+  .pop1 i
+  {
+    display:block;
+    text-align:center;
+    font-size:50px;
+    color: #8989ba; /* Old browsers */
+color: -moz-linear-gradient(top, #8989ba 0%, #8989ba 100%); /* FF3.6+ */
+color: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#8989ba), color-stop(100%,#8989ba)); /* Chrome,Safari4+ */
+color: -webkit-linear-gradient(top, #8989ba 0%,#8989ba 100%); /* Chrome10+,Safari5.1+ */
+color: -o-linear-gradient(top, #8989ba 0%,#8989ba 100%); /* Opera 11.10+ */
+color: -ms-linear-gradient(top, #8989ba 0%,#8989ba 100%); /* IE10+ */
+color: linear-gradient(to bottom, #8989ba 0%,#8989ba 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8989ba', endColorstr='#8989ba',GradientType=0 ); /* IE6-9 */
+copy
+    
+  }
+  .pop1 a
+  {
+    text-decoration:none;
+    float:left;
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  .add1
+  {
+    resize:none;
+     border: 1px solid #ccc;
+  border-radius: 4px;
+    }
+    .add1:focus {
+  border-color: #66afe9;
+  outline: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+          box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+}
+.pop2 h3
+{
+  font-size:24px;
+  letter-spacing:1px;
+  line-height:34px;
+  color:#036;
+  text-align:center;
+  font-weight:bold;
+}
+.org-col
+{
+  font-size:60px !important;
+  color:#3B5998;
+  margin-left:15px;
+  margin-right:15px;
+}
+.org-col1
+{
+  font-size:60px !important;
+  color:#d34836;
+  margin-left:15px;
+  margin-right:15px;
+}
+/*.pop2 .modal-body{
+  min-height: 400px !important;
+  height: auto;
+}*/
+.address {
+   width: 400px;
+    position: absolute;
+    float: left;
+   z-index: 55;
+   margin-left: 20px;
+
+}
+.Behind {
+  width:100%;
+  position: absolute;
+ 
+  
+}
+
+.modal {
+    overflow-y: auto;
+}
+/*.TopOne { 
+    position: absolute;
+    }*/
+
+</style>
+<%= gmaps(:markers => {
+            :data => @json        
+          }, 
+          :map_options => {
+            :do_clustering => false, 
+            :disableDoubleClickZoom => false,
+            :detect_location => true,       
+            :center_on_user  => true,        
+            :zoom => 13,
+            :auto_adjust => false,
+            :libraries => ["places"]
+          }
+) %>
+
+<!--div id="floating-panel" onclick="drop()">Click to mark home</div-->
+
+
+<%= content_for :scripts do %>
+
+    <script>
+        // Document ready stuff
+        $(document).ready(function() {
+            // Bizarre ajax errors
+            $(document).bind("ajaxError", function() {
+                alert_user('There was an error processing your request. Please try again later', 'alert-error');
+            });
+        });
+if(localStorage.address != undefined){
+  Gmaps.map.callback = function() {
+    Gmaps.map.map.setMapTypeId(google.maps.MapTypeId.SATELLITE);
+      start_store('<%=current_user%>');
+    }
+    }
+    else{
+        // Instance geocoder
+        var geocoder = new google.maps.Geocoder();
+
+        // New marker beacon
+        var playgroundsNewMarker = null;
+
+        // Google maps map-related events
+        Gmaps.map.callback = function() {
+        var input = document.getElementById('playground_search_box');
+        var searchBox = new google.maps.places.SearchBox(input);
+	   
+        Gmaps.map.map.addListener('bounds_changed', function() {
+        searchBox.setBounds(Gmaps.map.map.getBounds());
+      });
+        var markers = [];
+  // Listen for the event fired when the user selects a prediction and retrieve
+  // more details for that place.
+    searchBox.addListener('places_changed', function() {
+    var places = searchBox.getPlaces();
+   
+    // Clear out the old markers.
+    markers.forEach(function(marker) {
+      marker.setMap(null);
+    });
+    markers = [];
+    
+    // For each place, get the icon, name and location.
+    var bounds = new google.maps.LatLngBounds();
+    places.forEach(function(place) {
+      var icon = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a marker for each place.
+      markers.push(new google.maps.Marker({
+        map: Gmaps.map.map,
+        icon: icon,
+        title: place.name,
+        position: place.geometry.location
+      }));
+
+      if (place.geometry.viewport) {
+        // Only geocodes have viewport.
+        bounds.union(place.geometry.viewport);
+      } else {
+        bounds.extend(place.geometry.location);
+      }
+    });
+    Gmaps.map.map.fitBounds(bounds);
+  });
+            // Double click event to show new marker form
+            google.maps.event.addListener(Gmaps.map.serviceObject, 'click', function(event) {            
+    
+                // Remove previous marker when adding a new one
+                clearMarker(playgroundsNewMarker);
+    
+                // Geocode point. Callback on success will show the creation form
+               
+                geocodePoint(event.latLng, function(data) {
+                   playgroundsNew(data, '<%=current_user%>');
+
+                });
+
+            });
+        }; 
+      }
+      function keyDown()
+      {
+      	 $.ajax({
+         url: "<%= autocomplete_playground_address_playgrounds_path %>",
+         type: 'GET',
+  	  	 dataType: 'json',
+         data: {
+            term: $('#playground_search_box').val()
+        },
+        success:function(data){
+        	appendDbList(data);
+        }
+    });
+    }
+    function appendDbList(data)
+   	{
+		$(".db-item").remove();
+		if(data.length > 0)
+		{
+			data.forEach(function(item){
+			$(".pac-container").append('<div id="areasearch" class="pac-item db-item" ><span class="pac-icon pac-icon-marker"></span><span class="pac-item-query"><hidden name="playground-id" value=' + item.id +  '/><span class="pac-matched"></span>' + item.value + '</span><span>Area</span></div>');
+			});
+		}
+			$(document.body).on('mousedown', '#areasearch', function(e) {
+				$.ajax({
+			         url: '/playgrounds/' + e.target.getElementsByTagName('hidden')[0].getAttribute('value') + '.json',
+			         type: 'GET',
+			  	  	 dataType: 'json',
+			         data: {
+			            id: e.target.getElementsByTagName('Hidden')[0].getAttribute('value')
+			        },
+			        success:function(data){
+			        	document.getElementById('playground_search_box').value = data.address;
+			        	showMarker(data);
+			        }
+			   });
+			});
+	}
+    </script>
+<% end %>
+
+  
+</div>
+<%# content_for :contextual do %>
+    <%#=render :partial => 'home_side' %>
+<%# end %>
+
+
+

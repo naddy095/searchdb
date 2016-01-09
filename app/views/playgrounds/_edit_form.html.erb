@@ -1,0 +1,76 @@
+<%= form_for @playground, :html => { :id => 'playground_form', :multipart=>true }, :remote => true do |f| %>
+
+  <% if @playground.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@playground.errors.count, "error") %> prohibited this playground from being saved:</h2>
+
+      <ul>
+      <% @playground.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="modal-content pop2">
+    <div class="modal-body">
+    <table class="table table-bordered">
+      <tbody>
+         <tr>
+          <th scope="row">Type</th>
+          <%if @playground.myadd_type_id == 1  %>
+          <%=address_type = "House"%>
+          <% elsif @playground.myadd_type_id == 2 %>
+          <%=address_type = "Apartment" %>
+          <% elsif @playground.myadd_type_id == 3 %>
+          <%=address_type = "Building" %>
+          <% end %>
+          <td><%= f.text_field :myadd_type, :class=>"form-control", :readonly => true, :value => address_type %></td>
+         
+        </tr>
+        <tr>
+          <th scope="row">Name/no</th>
+          <td><%= f.text_field :name, :class=>"form-control", :value => @playground.name %></td>
+        </tr>
+        <tr>
+          <th scope="row">Address</th>
+          <td><%= text_area(:playground, :address, cols: 35, rows: 3, value: @playground.address) %></td>
+        </tr> 
+        <tr>
+          <th scope="row">City</th>
+          <td><%= f.text_field :city, :class=>"form-control", :readonly => true, :value => @playground.city %></td>
+         </tr>
+          <tr>
+          <th scope="row">Pincode</th>
+          <td><%= f.text_field :postal_code, :class=>"form-control", :readonly => true, :value => @playground.postal_code %></td>
+         </tr>
+          <tr>
+          <th scope="row">State</th>
+          <td><%= f.text_field :state, :class=>"form-control", :readonly => true, :value => @playground.state %></td>
+         </tr>
+          <tr>
+          <th scope="row">Country</th>
+          <td><%= f.text_field :country, :class=>"form-control", :readonly => true, :value => @playground.country %></td>
+         </tr>
+         <tr>
+          <th>Photo1</th>
+          <td><%= f.file_field :logo %></td>
+         </tr>
+         <tr>
+          <th>Photo2</th>
+          <td><%= f.file_field :picture %></td>
+         </tr>
+      </tbody>
+    </table>
+     <!-- <p align="center"><a href="javascript:void(0);" class="btn btn-success" onclick="start_store();">update address</a></p> -->
+  
+  <%= f.hidden_field :latitude %>
+  <%= f.hidden_field :longitude %>
+  <%= f.hidden_field :street_number %>
+  <%= f.hidden_field :route %>
+
+  <%= f.submit class: "btn btn-lg btn-primary", :value=>"update address", :style=> "height: 30px; font-size: 15px; border-radius: 1px; padding: 4px;" %>
+    </div>
+  </div>
+  
+<% end %>

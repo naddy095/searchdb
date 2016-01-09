@@ -1,0 +1,54 @@
+<p id="notice"><%= notice %></p>
+
+
+
+<p>
+  <strong>Name & No:</strong> 
+  <%= @playground.name %>
+</p>
+<p>
+  <strong>Type:</strong> 
+  <%= @playground.myadd_type %>
+</p>
+
+
+<p>
+  <strong>Address:</strong> 
+  <%= @playground.address %>
+</p>
+<p>
+  <strong>City:</strong>
+  <%= @playground.city %>
+</p>
+<p>
+  <strong>State:</strong>
+  <%= @playground.state %>
+</p>
+<p>
+  <strong>Country:</strong>
+  <%= @playground.country %>
+</p>
+<p>
+  <strong>Postal code:</strong>
+  <%= @playground.postal_code %>
+</p>
+<p>
+<strong>Address Bar:</strong>
+  <b><%= @playground.address_bar_index %></b>
+</p>
+<p>
+<strong>Image1:</strong>
+  <b><%= image_tag @playground.logo.url(:small) if @playground && @playground.logo %></b>
+</p>
+<p>
+<strong>Image2:</strong>
+  <b><%= image_tag @playground.picture.url(:small) if @playground && @playground.picture %></b>
+</p>
+
+<%#= link_to 'Edit', edit_playground_path(@playground), class: "btn btn-lg btn-primary", :remote =>true  %>
+
+<%#= link_to raw('Destroy <i class="icon-trash"></i>'), @playground, class: "btn btn-lg", method: "delete", data: { confirm: 'Are you sure?' }, :remote =>true %>
+ 
+  <a href="javascript:void(0);" onclick="report_spam('<%=@playground.id%>','<%=@playground.latitude%>','<%=@playground.longitude%>');" class="btn btn-lg btn-primary"> Report Spam</a>
+ 
+

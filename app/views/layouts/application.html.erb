@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      <title>MyAdd</title>
+ 
+
+      <%= stylesheet_link_tag 'http://fonts.googleapis.com/css?family=Lato:400,700' %>
+      <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true %>
+      <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+     
+      <%= csrf_meta_tags %>
+    </head>
+    <body>
+    
+
+        <div class="container-fluid">
+        <div class="notice"><%= notice %></div>
+          
+        </div>
+        <% unless current_user.nil? %>
+        <div style="float:right"><%= link_to "Logout", destroy_user_session_path, method: :delete, :class =>"btn" %></div><br /><br/>
+<% end %>
+
+            <div class="row-fluid">
+                <!--div class="span9">
+                </div-->
+                 <%= yield %>  
+            
+                <!--div class="span3"> 
+                    
+                    <div id="contextual-panel">
+                        <%#= yield :contextual %>
+                    </div>
+                </div-->
+            </div>
+        </div>
+
+        <%= yield :scripts %>
+
+    </body>
+</html>

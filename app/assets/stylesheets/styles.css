@@ -1,0 +1,19 @@
+.modal-footer {   border-top: 0px; }
+
+      
+
+.vertical-offset-100{
+    padding-top:180px;
+}
+.btn-block {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    margin: 5px;
+    padding-left: 0;
+    padding-right: 0;
+    width: 47% !important;
+}
+.form-control {
+	 height: 30px !important;
+}

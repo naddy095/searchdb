@@ -1,0 +1,32 @@
+<h4><%= "Activated" %></h4>
+							<table class="table table-bordered">
+								<thead>
+									<tr>
+										<th><%= 'Address Bar'%></th>
+										<th><%= 'Name'%></th>
+										<th><%= 'Address'%></th>
+										<th><%= 'Type' %></th>
+										<th><%= 'Decision'%></th>
+									</tr>
+								</thead>
+
+								<% @activated_playgrounds.each do | playground| %>
+								<tr>
+									<td><%= playground.address_bar_index %></td>
+									<td><%= playground.name.capitalize %></td>
+									<td><%= playground.address %></td>
+									<%if playground.myadd_type_id == 1  %>
+									<td><%= "House"%></td>
+									<% elsif playground.myadd_type_id == 2 %>
+									<td><%= "Apartment"%></td>
+									<% elsif playground.myadd_type_id == 3 %>
+									<td><%= "Building"%></td>
+									<% else %>
+									<td>&nbsp;</td>
+									<% end %>
+									<td><span title=""><%= 'Activate'%></span> | <a href="/playgrounds/<%= playground.id%>/edit" title=""><%= 'Edit'%></a> | <a href="javascript:void(0);" onclick="update_house('<%= playground.id%>',false);" title=""><%= "Delete" %></a></td>
+
+								</tr>
+								<% end %>
+							</table>
+							<%= js_will_paginate @activated_playgrounds , :param_name => 'activated_page'%>

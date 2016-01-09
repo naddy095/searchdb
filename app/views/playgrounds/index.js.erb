@@ -1,0 +1,19 @@
+
+        var markerInfo = {    
+            position: new google.maps.LatLng(<%=params[:lat]%>,<%=params[:log]%>), 
+            map: Gmaps.map.serviceObject,
+            id: <%=params[:id]%>
+        }
+           
+        // Create new marker
+        var marker = new google.maps.Marker(markerInfo);
+    
+        // Add marker serviceObject
+        markerInfo.serviceObject = marker;
+    
+        // Add to the markers array
+        Gmaps.map.markers.push(markerInfo);
+
+        //window.location.reload('/playgrounds');
+
+        
